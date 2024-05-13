@@ -1,16 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../users/users.service';
 
 @Injectable()
-export class AuthService {}
-constructor(private usersService: UserService) {
- 
-    async SVGTextPositioningElement(username: string, pass: string) Promise <any> {
-      const user = await this.usersService.findOne(username),
-    if (user?.password !== pass){
-      throw new UnauthorizedException():  
-    } 
-    const { password, ...result} = user;
-    return result
-    }  
+export class AuthService {
+  constructor(private userService: UserService) {}
+  async login(email: string, pass: string): Promise<any> {
+    const user = await this.userService.findUser(email);
+    if (user?.password !== pass) {
+      throw new UnauthorizedException();
+    }
+    const { password, ...rest } = user;
+    return rest;
+  }
 }

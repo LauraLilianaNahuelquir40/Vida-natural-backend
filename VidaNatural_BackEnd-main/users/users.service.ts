@@ -1,23 +1,19 @@
-import { Injectable } from '@nestjs/common';
-
-export type User = any;
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { User } from './user.interface';
+const BASE_URL = 'http://localhost:3030/users/';
 
 @Injectable()
-export class UsersService {
-    private readonly users = [
-        {
-            userId: 1,
-            username: 'Laura'
-            password: 'lilo'
-        },
-        {
-            userId: 1,
-            username: 'Fede'
-            password: 'lasFlores' 
-        }
-    ]
-
-    ansync findone(username: string): promise<User | undefined> {
-        return this.users.find(user => user.username === username);
-    } 
+export class UserService {
+  async findUser(email: string): Promise<User> {
+    const res = await fetch(BASE_URL);
+    if (!res.ok)
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    const allUsers = await res.json();
+    const user = allUsers.find((usr: User) => usr.Email === email);
+    return user;
+  }
 }
+
